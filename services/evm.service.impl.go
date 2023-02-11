@@ -6,10 +6,11 @@ import (
 	"context"
 
 	"go_blockChain_server/models"
+	sqlc "go_blockChain_server/mysql/sqlc"
 )
 
 type EvmLaunchpadServiceImpl struct {
-	// mysql db *sql.DB
+	query           *sqlc.Queries
 	evmLaunchpadCtx context.Context
 }
 
