@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"log"
+	"time"
 
 	"go_blockChain_server/controllers"
 	"go_blockChain_server/models"
@@ -41,6 +42,14 @@ func main() {
 		log.Fatal("launchpad sql Open Error : ", err)
 	}
 
+	db.SetConnMaxLifetime(time.Minute * 1)
+	db.SetMaxIdleConns(3)
+	db.SetMaxOpenConns(6)
+	// 인당 최대 connection수 제한
+	// 한명이 여러개의 db에 접근할 이유는 없다고 생각하기 떄문에 3으로 설정
+	// 이러한 설정을 통해서 connection이 재 사용 된다.
+	// sqlc 를 사용하였기 떄문에 어차피 query날리고 해당 함수에서 close를 실행함 -> connection재활용 가능
+
 	launchpadCtx := context.Background()
 	query := migrate.MigratMysql(db)
 
@@ -50,7 +59,7 @@ func main() {
 	elc.RegisterEvmLaunchpadRoutes(server)
 	tc.RegisterTestRoutes(server)
 
-	err = server.Run(":9090")
+	err = server.Run(":8080")
 	if err != nil {
 		log.Fatal(err)
 	}
