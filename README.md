@@ -1,2 +1,3 @@
 # go_blockChain
-README.md참고
+
+launchpad 관리하는 server
