@@ -14,11 +14,11 @@ type EvmLaunchpadServiceImpl struct {
 	evmLaunchpadCtx context.Context
 }
 
-func NewEvmLaunchpadServiceImpl(ctx context.Context) EvmLaunchpadService {
-	return &EvmLaunchpadServiceImpl{evmLaunchpadCtx: ctx}
+func NewEvmLaunchpadServiceImpl(ctx context.Context, query *sqlc.Queries) EvmLaunchpadService {
+	return &EvmLaunchpadServiceImpl{query: query, evmLaunchpadCtx: ctx}
 }
 
-func (el *EvmLaunchpadServiceImpl) CreateNewLunchpad(launchInfo *models.EvmLaunchpad) error {
+func (el *EvmLaunchpadServiceImpl) CreateNewLaunchpad(launchInfo *models.EvmLaunchpad) error {
 	return nil
 }
 

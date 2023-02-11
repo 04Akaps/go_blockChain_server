@@ -41,8 +41,8 @@ func (tc *TestController) GetAllTests(ctx *gin.Context) {
 	// ctx.JSON(http.StatusOK, tc.TestService.GetTests())
 }
 
-func (tc *TestController) RegisterTestRoutes(tg *gin.Engine) {
-	testRoute := tg.Group("/test")
+func (tc *TestController) RegisterTestRoutes(r *gin.Engine) {
+	testRoute := r.Group("/test")
 	testRoute.POST("/create", tc.CreateTest)
 	testRoute.GET("/getTests", tc.GetAllTests)
 }

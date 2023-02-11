@@ -10,12 +10,7 @@ import (
 	"github.com/golang-migrate/migrate/v4/database/mysql"
 )
 
-func MigratMysql() *sqlc.Queries {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/launchPad?multiStatements=true&parseTime=true")
-	if err != nil {
-		log.Fatal("launchpad sql Open Error : ", err)
-	}
-
+func MigratMysql(db *sql.DB) *sqlc.Queries {
 	driver, err := mysql.WithInstance(db, &mysql.Config{})
 	if err != nil {
 		log.Fatal("launchpad instance Error : ", err)
