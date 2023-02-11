@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS evmLaunchpad;
+DROP TABLE IF EXISTS aptosLaunchpad;
