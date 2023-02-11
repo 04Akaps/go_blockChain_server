@@ -42,8 +42,7 @@ func (tc *TestController) GetAllTests(ctx *gin.Context) {
 }
 
 func (tc *TestController) RegisterTestRoutes(tg *gin.Engine) {
-	// testRoute := tg.Group("/test")
-
-	// tg.POST("/create", tc.CreateTest)
-	tg.GET("/getTests", tc.GetAllTests)
+	testRoute := tg.Group("/test")
+	testRoute.POST("/create", tc.CreateTest)
+	testRoute.GET("/getTests", tc.GetAllTests)
 }
