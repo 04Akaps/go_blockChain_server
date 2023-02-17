@@ -1,15 +1,14 @@
 package controllers
 
 import (
-	"errors"
 	"net/http"
 
 	"go_blockChain_server/customerror"
+	"go_blockChain_server/middleware"
 	"go_blockChain_server/models"
 	"go_blockChain_server/services"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 )
 
 type EvmLaunchpadController struct {
@@ -25,28 +24,20 @@ func NewLaunchpadController(els services.EvmLaunchpadService) EvmLaunchpadContro
 func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 	var req models.EvmLaunchpad
 
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		// bind 체크를 위한 코드
-		var ve validator.ValidationErrors
-		if errors.As(err, &ve) {
-			out := make([]models.ErrorMsg, len(ve))
-			for i, fe := range ve {
-				out[i] = models.ErrorMsg{fe.Field(), customerror.GetErrorMsg(fe)}
-			}
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": out})
-		}
-
-		// error response example
-		// {
-		// 	"errors": [
-		// 		{
-		// 			"field": "Name",
-		// 			"message": "This field is required"
-		// 		}
-		// 	]
-		// }
-		return
+	bodyCheckError := middleware.CheckBodyBinding(req, ctx)
+	if bodyCheckError != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": bodyCheckError})
 	}
+
+	// error response example
+	// {
+	// 	"errors": [
+	// 		{
+	// 			"field": "Name",
+	// 			"message": "This field is required"
+	// 		}
+	// 	]
+	// }
 
 	err := elc.EvmLaunchpadService.CreateNewLaunchpad(&req)
 	if err != nil {
@@ -63,18 +54,23 @@ type getMyAllLaunchpadReq struct {
 func (elc *EvmLaunchpadController) GetMyAllLaunchpad(ctx *gin.Context) {
 	var req getMyAllLaunchpadReq
 
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		// bind 체크를 위한 코드
-		var ve validator.ValidationErrors
-		if errors.As(err, &ve) {
-			out := make([]models.ErrorMsg, len(ve))
-			for i, fe := range ve {
-				out[i] = models.ErrorMsg{fe.Field(), customerror.GetErrorMsg(fe)}
-			}
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": out})
-		}
-		return
+	bodyCheckError := middleware.CheckBodyBinding(req, ctx)
+	if bodyCheckError != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": bodyCheckError})
 	}
+
+	// if err := ctx.ShouldBindJSON(&req); err != nil {
+	// 	// bind 체크를 위한 코드
+	// 	var ve validator.ValidationErrors
+	// 	if errors.As(err, &ve) {
+	// 		out := make([]models.ErrorMsg, len(ve))
+	// 		for i, fe := range ve {
+	// 			out[i] = models.ErrorMsg{fe.Field(), customerror.GetErrorMsg(fe)}
+	// 		}
+	// 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": out})
+	// 	}
+	// 	return
+	// }
 
 	result, err := elc.EvmLaunchpadService.GetMyAllLaunchpad(req.EoaAddress)
 	if err != nil {
