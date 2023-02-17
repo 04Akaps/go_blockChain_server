@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"log"
 	"time"
 
@@ -34,6 +33,7 @@ func init() {
 }
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	server := gin.Default()
 
 	// evmLaunchpad mysql
@@ -42,8 +42,6 @@ func main() {
 	if err != nil {
 		log.Fatal("launchpad sql Open Error : ", err)
 	}
-
-	fmt.Printf("%v", db)
 
 	db.SetConnMaxLifetime(time.Minute * 1)
 	db.SetMaxIdleConns(3)

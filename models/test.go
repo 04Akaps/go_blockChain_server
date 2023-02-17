@@ -2,7 +2,7 @@ package models
 
 type Test struct {
 	Name string `json:"name"`
-	Age  int64  `json:"age`
+	Age  int64  `json:"age"`
 }
 
 type NoEvmAddress struct {
