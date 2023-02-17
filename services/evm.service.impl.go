@@ -1,7 +1,5 @@
 package services
 
-// store *db.Store
-
 import (
 	"context"
 
@@ -19,13 +17,27 @@ func NewEvmLaunchpadServiceImpl(ctx context.Context, query *sqlc.Queries) EvmLau
 }
 
 func (el *EvmLaunchpadServiceImpl) CreateNewLaunchpad(launchInfo *models.EvmLaunchpad) error {
+	arg := sqlc.CreateEvmLaunchpadParams{
+		EoaAddress:      launchInfo.EoaAddress,
+		ContractAddress: launchInfo.ContractAddress,
+		NetworkChainID:  int32(launchInfo.NetworkChainId),
+		Price:           int32(launchInfo.Price),
+		MetaDataUri:     launchInfo.MetaDataUri,
+	}
+
+	_, err := el.query.CreateEvmLaunchpad(el.evmLaunchpadCtx, arg)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (el *EvmLaunchpadServiceImpl) GetMyAllLaunchpad(eoaAddress *string) *[]models.EvmLaunchpad {
-	return nil
-}
+func (el *EvmLaunchpadServiceImpl) GetMyAllLaunchpad(eoaAddress string) ([]sqlc.EvmLaunchpad, error) {
+	result, err := el.query.GetMyAllLaunchpad(el.evmLaunchpadCtx, eoaAddress)
+	if err != nil {
+		return nil, err
+	}
 
-func (el *EvmLaunchpadServiceImpl) GetMyLaunchpad(contractAddress *string) *models.EvmLaunchpad {
-	return nil
+	return result, err
 }

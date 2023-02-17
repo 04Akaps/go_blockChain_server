@@ -1,9 +1,10 @@
 CREATE TABLE `evmLaunchpad` (
 	`id` bigint PRIMARY KEY AUTO_INCREMENT,
 	`eoa_address` varchar(255) NOT NULL,
-	`ca_address` varchar(255) NOT NULL,
-	`chain_id` integer NOT NULL,
+	`contract_address` varchar(255) NOT NULL,
+	`network_chain_id` integer NOT NULL,
 	`price` integer NOT NULL,
+	`meta_data_uri` varchar(255) NOT NULL,
 	`created_at` varchar(255) NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 

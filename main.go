@@ -33,7 +33,7 @@ func init() {
 }
 
 func main() {
-	gin.SetMode(gin.ReleaseMode)
+	// gin.SetMode(gin.ReleaseMode) // 후에 필요할 떄 사용
 	server := gin.Default()
 
 	// evmLaunchpad mysql

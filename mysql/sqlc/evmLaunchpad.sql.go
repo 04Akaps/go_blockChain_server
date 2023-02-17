@@ -11,36 +11,40 @@ import (
 const createEvmLaunchpad = `-- name: CreateEvmLaunchpad :execresult
 INSERT INTO evmLaunchpad (
     eoa_address,
-    ca_address,
-    chain_id,
-    created_at
+    contract_address,
+    network_chain_id,
+    price,
+    meta_data_uri
 ) VALUES (
-   ?, ?, ?, ?
+   ?, ?, ?, ?, ?
 )
 `
 
 type CreateEvmLaunchpadParams struct {
-	EoaAddress string `json:"eoa_address"`
-	CaAddress  string `json:"ca_address"`
-	ChainID    int32  `json:"chain_id"`
-	CreatedAt  string `json:"created_at"`
+	EoaAddress      string `json:"eoa_address"`
+	ContractAddress string `json:"contract_address"`
+	NetworkChainID  int32  `json:"network_chain_id"`
+	Price           int32  `json:"price"`
+	MetaDataUri     string `json:"meta_data_uri"`
 }
 
 func (q *Queries) CreateEvmLaunchpad(ctx context.Context, arg CreateEvmLaunchpadParams) (sql.Result, error) {
 	return q.db.ExecContext(ctx, createEvmLaunchpad,
 		arg.EoaAddress,
-		arg.CaAddress,
-		arg.ChainID,
-		arg.CreatedAt,
+		arg.ContractAddress,
+		arg.NetworkChainID,
+		arg.Price,
+		arg.MetaDataUri,
 	)
 }
 
 const getMyAllLaunchpad = `-- name: GetMyAllLaunchpad :many
-SELECT id, eoa_address, ca_address, chain_id, price, created_at FROM evmLaunchpad
+SELECT id, eoa_address, contract_address, network_chain_id, price, meta_data_uri, created_at FROM evmLaunchpad
+WHERE eoa_address = ? LIMIT 1
 `
 
-func (q *Queries) GetMyAllLaunchpad(ctx context.Context) ([]EvmLaunchpad, error) {
-	rows, err := q.db.QueryContext(ctx, getMyAllLaunchpad)
+func (q *Queries) GetMyAllLaunchpad(ctx context.Context, eoaAddress string) ([]EvmLaunchpad, error) {
+	rows, err := q.db.QueryContext(ctx, getMyAllLaunchpad, eoaAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -51,9 +55,10 @@ func (q *Queries) GetMyAllLaunchpad(ctx context.Context) ([]EvmLaunchpad, error)
 		if err := rows.Scan(
 			&i.ID,
 			&i.EoaAddress,
-			&i.CaAddress,
-			&i.ChainID,
+			&i.ContractAddress,
+			&i.NetworkChainID,
 			&i.Price,
+			&i.MetaDataUri,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -67,23 +72,4 @@ func (q *Queries) GetMyAllLaunchpad(ctx context.Context) ([]EvmLaunchpad, error)
 		return nil, err
 	}
 	return items, nil
-}
-
-const getMyLaunchpad = `-- name: GetMyLaunchpad :one
-SELECT id, eoa_address, ca_address, chain_id, price, created_at FROM evmLaunchpad
-WHERE eoa_address = ? LIMIT 1
-`
-
-func (q *Queries) GetMyLaunchpad(ctx context.Context, eoaAddress string) (EvmLaunchpad, error) {
-	row := q.db.QueryRowContext(ctx, getMyLaunchpad, eoaAddress)
-	var i EvmLaunchpad
-	err := row.Scan(
-		&i.ID,
-		&i.EoaAddress,
-		&i.CaAddress,
-		&i.ChainID,
-		&i.Price,
-		&i.CreatedAt,
-	)
-	return i, err
 }

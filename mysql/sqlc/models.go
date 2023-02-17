@@ -13,10 +13,11 @@ type AptosLaunchpad struct {
 }
 
 type EvmLaunchpad struct {
-	ID         int64  `json:"id"`
-	EoaAddress string `json:"eoa_address"`
-	CaAddress  string `json:"ca_address"`
-	ChainID    int32  `json:"chain_id"`
-	Price      int32  `json:"price"`
-	CreatedAt  string `json:"created_at"`
+	ID              int64  `json:"id"`
+	EoaAddress      string `json:"eoa_address"`
+	ContractAddress string `json:"contract_address"`
+	NetworkChainID  int32  `json:"network_chain_id"`
+	Price           int32  `json:"price"`
+	MetaDataUri     string `json:"meta_data_uri"`
+	CreatedAt       string `json:"created_at"`
 }
