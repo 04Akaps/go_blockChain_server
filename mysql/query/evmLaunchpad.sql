@@ -1,16 +1,14 @@
 -- name: CreateEvmLaunchpad :execresult
 INSERT INTO evmLaunchpad (
     eoa_address,
-    ca_address,
-    chain_id,
-    created_at
+    contract_address,
+    network_chain_id,
+    price,
+    meta_data_uri
 ) VALUES (
-   ?, ?, ?, ?
+   ?, ?, ?, ?, ?
 );
 
--- name: GetMyLaunchpad :one
+-- name: GetMyAllLaunchpad :many
 SELECT * FROM evmLaunchpad
 WHERE eoa_address = ? LIMIT 1;
-
--- name: GetMyAllLaunchpad :many
-SELECT * FROM evmLaunchpad;
