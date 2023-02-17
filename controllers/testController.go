@@ -37,7 +37,7 @@ func (tc *TestController) CreateTest(ctx *gin.Context) {
 }
 
 func (tc *TestController) GetAllTests(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, "nil")
+	ctx.JSON(http.StatusOK, tc.TestService.GetTests())
 	// ctx.JSON(http.StatusOK, tc.TestService.GetTests())
 }
 
