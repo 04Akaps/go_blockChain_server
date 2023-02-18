@@ -30,6 +30,20 @@ func init() {
 
 	ts = services.NewTestService(testList, testCtx)
 	tc = controllers.New(ts)
+
+	gin.DisableConsoleColor()
+
+	// --- Create Log Files ---
+	t := time.Now()
+	startTime := t.Format("2006-01-02 15:04:05")
+	logFile := "logList/server_log -" + startTime + ".log"
+
+	_, err := os.Create(logFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// gin.DefaultWriter = io.MultiWriter(f)
 }
 
 func main() {
@@ -57,6 +71,7 @@ func main() {
 	els := services.NewEvmLaunchpadServiceImpl(launchpadCtx, query)
 	elc := controllers.NewLaunchpadController(els)
 
+	controllers.SwaggerSet(server)
 	elc.RegisterEvmLaunchpadRoutes(server)
 	tc.RegisterTestRoutes(server)
 

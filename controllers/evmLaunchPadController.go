@@ -21,6 +21,14 @@ func NewLaunchpadController(els services.EvmLaunchpadService) EvmLaunchpadContro
 	}
 }
 
+// @Summary Create New launchpad
+// @Schemes
+// @Description Create New launchpad In Evm
+// @Tags EVM Launchpad
+// @Produce json
+// @Params tags body models.EvmLaunchpad true "Create New launchpad"
+// @response default {object} models.EvmLaunchpaSuccessResponse{}
+// @Router /evmLaunchpad/CreateNewLaunchPad [post]
 func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 	var req models.EvmLaunchpad
 
@@ -40,18 +48,6 @@ func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 	// 			"field": "ContractAddress",
 	// 			"message": "This field is required"
 	// 		},
-	// 		{
-	// 			"field": "NetworkChainId",
-	// 			"message": "This field is required"
-	// 		},
-	// 		{
-	// 			"field": "Price",
-	// 			"message": "This field is required"
-	// 		},
-	// 		{
-	// 			"field": "MetaDataUri",
-	// 			"message": "This field is required"
-	// 		}
 	// 	],
 	// 	"status": -1
 	// }
@@ -61,15 +57,28 @@ func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 		ctx.JSON(500, customerror.ErrorMsg(err)) // db 저장 실패 http 상태 코드
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"status": 0, "message": "Create Launchpad"})
+
+
+	response := models.EvmLaunchpaSuccessResponse{
+		Status:  1,
+		Message: "Create Launchpad Successful",
+	}
+	ctx.JSON(http.StatusOK, response)
+
 }
 
 type getMyAllLaunchpadReq struct {
 	EoaAddress string `form:"eoa_address" binding:"startswith=0x"`
-
-	// startswith=0x
 }
 
+// @Summary getMy All EvmLaunchpad
+// @Schemes
+// @Description getMy All EvmLaunchpad
+// @Tags EVM Launchpad
+// @Produce json
+// @Param eoa_address query string true "input my Eoa Address"
+// @response default {object} models.EvmLaunchpaSuccessResponse{}
+// @Router /evmLaunchpad/GetMyAllLaunchpad [get]
 func (elc *EvmLaunchpadController) GetMyAllLaunchpad(ctx *gin.Context) {
 	var req getMyAllLaunchpadReq
 
@@ -86,6 +95,10 @@ func (elc *EvmLaunchpadController) GetMyAllLaunchpad(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, result)
+}
+
+func (elc *EvmLaunchpadController) DeleteAllLaunchpadByAdmin(ctx *gin.Context) {
+	// debug용 후에 데이터 전체 삭제해야 할 떄 사용
 }
 
 func (elc *EvmLaunchpadController) RegisterEvmLaunchpadRoutes(r *gin.Engine) {
