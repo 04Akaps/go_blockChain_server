@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"database/sql"
+	"io"
 	"log"
+	"os"
 	"time"
 
 	"go_blockChain_server/controllers"
@@ -30,6 +32,20 @@ func init() {
 
 	ts = services.NewTestService(testList, testCtx)
 	tc = controllers.New(ts)
+
+	gin.DisableConsoleColor()
+
+	// --- Create Log Files ---
+	t := time.Now()
+	startTime := t.Format("2006-01-02 15:04:05")
+	logFile := "logs/server_log -" + startTime
+
+	f, err := os.Create(logFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	gin.DefaultWriter = io.MultiWriter(f)
 }
 
 func main() {
@@ -59,6 +75,7 @@ func main() {
 
 	elc.RegisterEvmLaunchpadRoutes(server)
 	tc.RegisterTestRoutes(server)
+	controllers.SwaggerSet(server)
 
 	err = server.Run(":8080")
 	if err != nil {
