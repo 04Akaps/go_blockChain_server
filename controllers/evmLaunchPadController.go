@@ -24,19 +24,36 @@ func NewLaunchpadController(els services.EvmLaunchpadService) EvmLaunchpadContro
 func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 	var req models.EvmLaunchpad
 
-	bodyCheckError := middleware.CheckBodyBinding(req, ctx)
+	bodyCheckError := middleware.CheckBodyBinding(&req, ctx)
 	if bodyCheckError != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": bodyCheckError})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": bodyCheckError, "status": -1})
+		return
 	}
-
 	// error response example
 	// {
 	// 	"errors": [
 	// 		{
-	// 			"field": "Name",
+	// 			"field": "EoaAddress",
+	// 			"message": "This field is required"
+	// 		},
+	// 		{
+	// 			"field": "ContractAddress",
+	// 			"message": "This field is required"
+	// 		},
+	// 		{
+	// 			"field": "NetworkChainId",
+	// 			"message": "This field is required"
+	// 		},
+	// 		{
+	// 			"field": "Price",
+	// 			"message": "This field is required"
+	// 		},
+	// 		{
+	// 			"field": "MetaDataUri",
 	// 			"message": "This field is required"
 	// 		}
-	// 	]
+	// 	],
+	// 	"status": -1
 	// }
 
 	err := elc.EvmLaunchpadService.CreateNewLaunchpad(&req)
@@ -54,10 +71,10 @@ type getMyAllLaunchpadReq struct {
 func (elc *EvmLaunchpadController) GetMyAllLaunchpad(ctx *gin.Context) {
 	var req getMyAllLaunchpadReq
 
-	bodyCheckError := middleware.CheckBodyBinding(req, ctx)
-	if bodyCheckError != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": bodyCheckError})
-	}
+	// bodyCheckError := middleware.CheckBodyBinding(req, ctx)
+	// if bodyCheckError != nil {
+	// 	ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": bodyCheckError})
+	// }
 
 	// if err := ctx.ShouldBindJSON(&req); err != nil {
 	// 	// bind 체크를 위한 코드
@@ -79,10 +96,6 @@ func (elc *EvmLaunchpadController) GetMyAllLaunchpad(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, result)
-}
-
-type tetetet struct {
-	Name string `json:"name" binding:"required"`
 }
 
 func (elc *EvmLaunchpadController) RegisterEvmLaunchpadRoutes(r *gin.Engine) {
