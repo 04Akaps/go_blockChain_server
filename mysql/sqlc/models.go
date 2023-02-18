@@ -2,22 +2,24 @@
 
 package launchpad
 
-import ()
+import (
+	"time"
+)
 
 type AptosLaunchpad struct {
-	ID            int64  `json:"id"`
-	UserAddress   string `json:"user_address"`
-	ModuleAddress string `json:"module_address"`
-	Price         int32  `json:"price"`
-	CreatedAt     string `json:"created_at"`
+	ID            int64     `json:"id"`
+	UserAddress   string    `json:"user_address"`
+	ModuleAddress string    `json:"module_address"`
+	Price         int32     `json:"price"`
+	CreatedAt     time.Time `json:"created_at"`
 }
 
 type EvmLaunchpad struct {
-	ID              int64  `json:"id"`
-	EoaAddress      string `json:"eoa_address"`
-	ContractAddress string `json:"contract_address"`
-	NetworkChainID  int32  `json:"network_chain_id"`
-	Price           int32  `json:"price"`
-	MetaDataUri     string `json:"meta_data_uri"`
-	CreatedAt       string `json:"created_at"`
+	ID              int64     `json:"id"`
+	EoaAddress      string    `json:"eoa_address"`
+	ContractAddress string    `json:"contract_address"`
+	NetworkChainID  int32     `json:"network_chain_id"`
+	Price           int32     `json:"price"`
+	MetaDataUri     string    `json:"meta_data_uri"`
+	CreatedAt       time.Time `json:"created_at"`
 }

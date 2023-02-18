@@ -58,16 +58,14 @@ func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 		return
 	}
 
-
 	response := models.EvmLaunchpaSuccessResponse{
 		Status:  1,
 		Message: "Create Launchpad Successful",
 	}
 	ctx.JSON(http.StatusOK, response)
-
 }
 
-type getMyAllLaunchpadReq struct {
+type getAllLaunchPadRequest struct {
 	EoaAddress string `form:"eoa_address" binding:"startswith=0x"`
 }
 
@@ -77,10 +75,10 @@ type getMyAllLaunchpadReq struct {
 // @Tags EVM Launchpad
 // @Produce json
 // @Param eoa_address query string true "input my Eoa Address"
-// @response default {object} models.EvmLaunchpaSuccessResponse{}
+// @response default {object} []models.EvmLaunchpad{}
 // @Router /evmLaunchpad/GetMyAllLaunchpad [get]
 func (elc *EvmLaunchpadController) GetMyAllLaunchpad(ctx *gin.Context) {
-	var req getMyAllLaunchpadReq
+	var req getAllLaunchPadRequest
 
 	queryCheckError := middleware.CheckUriQueryBinding(&req, ctx)
 	if queryCheckError != nil {
@@ -97,6 +95,36 @@ func (elc *EvmLaunchpadController) GetMyAllLaunchpad(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
+type getLaunchPadRequest struct {
+	CaAddress string `form:"ca_address" binding:"startswith=0x"`
+}
+
+// @Summary get EvmLaunchpad
+// @Schemes
+// @Description get EvmLaunchpad
+// @Tags EVM Launchpad
+// @Produce json
+// @Param eoa_address query string true "Input ca Address"
+// @response default {object} models.EvmLaunchpad{}
+// @Router /evmLaunchpad/GetMyAllLaunchpad [get]
+func (elc *EvmLaunchpadController) GetOneLaunchpad(ctx *gin.Context) {
+	var req getLaunchPadRequest
+
+	queryCheckError := middleware.CheckUriQueryBinding(&req, ctx)
+	if queryCheckError != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": queryCheckError, "status": -1})
+		return
+	}
+
+	launchpad, err := elc.EvmLaunchpadService.GetOneLaunchpad(req.CaAddress)
+	if err != nil {
+		ctx.JSON(500, customerror.ErrorMsg(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, launchpad)
+}
+
 func (elc *EvmLaunchpadController) DeleteAllLaunchpadByAdmin(ctx *gin.Context) {
 	// debug용 후에 데이터 전체 삭제해야 할 떄 사용
 }
@@ -105,5 +133,7 @@ func (elc *EvmLaunchpadController) RegisterEvmLaunchpadRoutes(r *gin.Engine) {
 	route := r.Group("/evmLaunchpad")
 
 	route.POST("/CreateNewLaunchPad", elc.CreateNewLaunchPad)
-	route.GET("/GetMyAllLaunchpad", elc.GetMyAllLaunchpad)
+	route.GET("/GetMyAllLaunchPad", elc.GetMyAllLaunchpad)
+	route.GET("/GetLaunchPad", elc.GetOneLaunchpad)
+	route.DELETE("/DeleteAllLaunchpadData", elc.DeleteAllLaunchpadByAdmin)
 }

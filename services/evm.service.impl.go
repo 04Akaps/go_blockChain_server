@@ -41,3 +41,21 @@ func (el *EvmLaunchpadServiceImpl) GetMyAllLaunchpad(eoaAddress string) ([]sqlc.
 
 	return result, err
 }
+
+func (el *EvmLaunchpadServiceImpl) GetOneLaunchpad(caAddress string) (*models.EvmLaunchpad, error) {
+	result, err := el.query.GetLaunchpad(el.evmLaunchpadCtx, caAddress)
+	if err != nil {
+		return nil, err
+	}
+	returnValue := models.EvmLaunchpad{
+		EoaAddress:      result.EoaAddress,
+		ContractAddress: result.ContractAddress,
+		NetworkChainId:  int64(result.NetworkChainID),
+		Price:           int64(result.Price),
+		MetaDataUri:     result.MetaDataUri,
+	}
+	return &returnValue, nil
+}
+
+func (el *EvmLaunchpadServiceImpl) DeleteAllLaunchpadByAdmin() {
+}

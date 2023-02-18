@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	sqlc "go_blockChain_server/mysql/sqlc"
@@ -14,7 +13,6 @@ import (
 	_ "github.com/mattes/migrate/source/file"
 
 	_ "github.com/go-sql-driver/mysql"
-
 )
 
 func MigratMysql(db *sql.DB) *sqlc.Queries {
@@ -34,9 +32,6 @@ func MigratMysql(db *sql.DB) *sqlc.Queries {
 
 	version, dirty, err := m.Version()
 
-	fmt.Printf("%v\n", version)
-	fmt.Printf("%v\n", dirty)
-
 	if dirty {
 		// dirty version이 껴있는 경우
 		m.Drop()
@@ -47,7 +42,9 @@ func MigratMysql(db *sql.DB) *sqlc.Queries {
 	// 다른 방법으로는 version을 up하는 경우도 있는데, 그것보다는 개인적으로 개발할떄는 이게 훨씬 빠르게 가능
 
 	if err := m.Migrate(version); err != nil {
-		log.Fatal("-----: ", err)
+		if err != migrate.ErrNoChange {
+			log.Fatal("-----: ", err)
+		}
 	}
 
 	m.Steps(2)
