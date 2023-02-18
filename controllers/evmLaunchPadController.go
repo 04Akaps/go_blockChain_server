@@ -65,16 +65,17 @@ func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 }
 
 type getMyAllLaunchpadReq struct {
-	EoaAddress string `uri:"eoa_address" binding:"required,startswith=0x"`
+	EoaAddress string `form:"eoa_address" binding:"startswith=0x"`
+
+	// startswith=0x
 }
 
 func (elc *EvmLaunchpadController) GetMyAllLaunchpad(ctx *gin.Context) {
 	var req getMyAllLaunchpadReq
 
-	paramsCheckError := middleware.CheckUriParamsBinding(&req, ctx)
-
-	if paramsCheckError != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": paramsCheckError, "status": -1})
+	queryCheckError := middleware.CheckUriQueryBinding(&req, ctx)
+	if queryCheckError != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": queryCheckError, "status": -1})
 		return
 	}
 
@@ -91,5 +92,5 @@ func (elc *EvmLaunchpadController) RegisterEvmLaunchpadRoutes(r *gin.Engine) {
 	route := r.Group("/evmLaunchpad")
 
 	route.POST("/CreateNewLaunchPad", elc.CreateNewLaunchPad)
-	route.GET("/GetMyAllLaunchpad/:eoa_address", elc.GetMyAllLaunchpad)
+	route.GET("/GetMyAllLaunchpad", elc.GetMyAllLaunchpad)
 }
