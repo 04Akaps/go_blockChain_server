@@ -36,3 +36,26 @@ func CheckBodyBinding(req interface{}, ctx *gin.Context) []models.ErrorMsg {
 
 	return nil
 }
+
+func CheckUriParamsBinding(req interface{}, ctx *gin.Context) []models.ErrorMsg {
+	if req == nil {
+		return []models.ErrorMsg{{
+			Field:   "req is nil",
+			Message: "req is nil",
+		}}
+	}
+
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		// bind 체크를 위한 코드
+		var ve validator.ValidationErrors
+		if errors.As(err, &ve) {
+			out := make([]models.ErrorMsg, len(ve))
+			for i, fe := range ve {
+				out[i] = models.ErrorMsg{fe.Field(), customerror.GetErrorMsg(fe)}
+			}
+			return out
+		}
+	}
+
+	return nil
+}

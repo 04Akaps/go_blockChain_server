@@ -65,29 +65,18 @@ func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 }
 
 type getMyAllLaunchpadReq struct {
-	EoaAddress string `json:"eoa_address" binding:"required,startswith=0x"`
+	EoaAddress string `uri:"eoa_address" binding:"required,startswith=0x"`
 }
 
 func (elc *EvmLaunchpadController) GetMyAllLaunchpad(ctx *gin.Context) {
 	var req getMyAllLaunchpadReq
 
-	// bodyCheckError := middleware.CheckBodyBinding(req, ctx)
-	// if bodyCheckError != nil {
-	// 	ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": bodyCheckError})
-	// }
+	paramsCheckError := middleware.CheckUriParamsBinding(&req, ctx)
 
-	// if err := ctx.ShouldBindJSON(&req); err != nil {
-	// 	// bind 체크를 위한 코드
-	// 	var ve validator.ValidationErrors
-	// 	if errors.As(err, &ve) {
-	// 		out := make([]models.ErrorMsg, len(ve))
-	// 		for i, fe := range ve {
-	// 			out[i] = models.ErrorMsg{fe.Field(), customerror.GetErrorMsg(fe)}
-	// 		}
-	// 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": out})
-	// 	}
-	// 	return
-	// }
+	if paramsCheckError != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": paramsCheckError, "status": -1})
+		return
+	}
 
 	result, err := elc.EvmLaunchpadService.GetMyAllLaunchpad(req.EoaAddress)
 	if err != nil {
@@ -102,5 +91,5 @@ func (elc *EvmLaunchpadController) RegisterEvmLaunchpadRoutes(r *gin.Engine) {
 	route := r.Group("/evmLaunchpad")
 
 	route.POST("/CreateNewLaunchPad", elc.CreateNewLaunchPad)
-	route.GET("/GetMyAllLaunchpad", elc.GetMyAllLaunchpad)
+	route.GET("/GetMyAllLaunchpad/:eoa_address", elc.GetMyAllLaunchpad)
 }
