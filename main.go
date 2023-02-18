@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"log"
-	"os"
 	"time"
 
 	"go_blockChain_server/controllers"

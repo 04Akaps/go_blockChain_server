@@ -58,11 +58,13 @@ func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 		return
 	}
 
+
 	response := models.EvmLaunchpaSuccessResponse{
 		Status:  1,
 		Message: "Create Launchpad Successful",
 	}
 	ctx.JSON(http.StatusOK, response)
+
 }
 
 type getMyAllLaunchpadReq struct {

@@ -13,6 +13,6 @@ INSERT INTO evmLaunchpad (
 SELECT * FROM evmLaunchpad
 WHERE eoa_address = ? LIMIT 1;
 
-
 -- name: DeleteAllLaunchpad :execresult
 DELETE * FROM evmLaunchpad
+

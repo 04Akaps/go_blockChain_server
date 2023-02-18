@@ -14,6 +14,7 @@ import (
 	_ "github.com/mattes/migrate/source/file"
 
 	_ "github.com/go-sql-driver/mysql"
+
 )
 
 func MigratMysql(db *sql.DB) *sqlc.Queries {
@@ -21,7 +22,6 @@ func MigratMysql(db *sql.DB) *sqlc.Queries {
 	if err != nil {
 		log.Fatal("launchpad instance Error : ", err)
 	}
-	// migrate --path db/migration -database "postgresql://root:hojin@localhost:5432/simple_bank?sslmode=disable" -verbose up
 
 	m, err := migrate.NewWithDatabaseInstance(
 		"file://mysql/migrate",
@@ -49,5 +49,8 @@ func MigratMysql(db *sql.DB) *sqlc.Queries {
 	if err := m.Migrate(version); err != nil {
 		log.Fatal("-----: ", err)
 	}
+
+	m.Steps(2)
+
 	return sqlc.New(db)
 }
