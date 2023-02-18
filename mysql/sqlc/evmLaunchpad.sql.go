@@ -38,9 +38,37 @@ func (q *Queries) CreateEvmLaunchpad(ctx context.Context, arg CreateEvmLaunchpad
 	)
 }
 
+const deleteAllLaunchpad = `-- name: DeleteAllLaunchpad :execresult
+DELETE FROM evmLaunchpad
+`
+
+func (q *Queries) DeleteAllLaunchpad(ctx context.Context) (sql.Result, error) {
+	return q.db.ExecContext(ctx, deleteAllLaunchpad)
+}
+
+const getLaunchpad = `-- name: GetLaunchpad :one
+SELECT id, eoa_address, contract_address, network_chain_id, price, meta_data_uri, created_at FROM evmLaunchpad
+WHERE contract_address = ? LIMIT 1
+`
+
+func (q *Queries) GetLaunchpad(ctx context.Context, contractAddress string) (EvmLaunchpad, error) {
+	row := q.db.QueryRowContext(ctx, getLaunchpad, contractAddress)
+	var i EvmLaunchpad
+	err := row.Scan(
+		&i.ID,
+		&i.EoaAddress,
+		&i.ContractAddress,
+		&i.NetworkChainID,
+		&i.Price,
+		&i.MetaDataUri,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const getMyAllLaunchpad = `-- name: GetMyAllLaunchpad :many
 SELECT id, eoa_address, contract_address, network_chain_id, price, meta_data_uri, created_at FROM evmLaunchpad
-WHERE eoa_address = ? LIMIT 1
+WHERE eoa_address = ?
 `
 
 func (q *Queries) GetMyAllLaunchpad(ctx context.Context, eoaAddress string) ([]EvmLaunchpad, error) {

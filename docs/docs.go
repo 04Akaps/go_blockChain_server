@@ -37,18 +37,18 @@ const docTemplate = `{
         },
         "/evmLaunchpad/GetMyAllLaunchpad": {
             "get": {
-                "description": "getMy All EvmLaunchpad",
+                "description": "get EvmLaunchpad",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "EVM Launchpad"
                 ],
-                "summary": "getMy All EvmLaunchpad",
+                "summary": "get EvmLaunchpad",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "input my Eoa Address",
+                        "description": "Input ca Address",
                         "name": "eoa_address",
                         "in": "query",
                         "required": true
@@ -58,7 +58,7 @@ const docTemplate = `{
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/models.EvmLaunchpaSuccessResponse"
+                            "$ref": "#/definitions/models.EvmLaunchpad"
                         }
                     }
                 }
@@ -74,6 +74,34 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.EvmLaunchpad": {
+            "type": "object",
+            "required": [
+                "contract_address",
+                "eoa_address",
+                "meta_data_uri",
+                "network_chain_id",
+                "price"
+            ],
+            "properties": {
+                "contract_address": {
+                    "type": "string"
+                },
+                "eoa_address": {
+                    "type": "string"
+                },
+                "meta_data_uri": {
+                    "type": "string"
+                },
+                "network_chain_id": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "integer",
+                    "minimum": -0
                 }
             }
         }
