@@ -1,4 +1,44 @@
+definitions:
+  models.EvmLaunchpaSuccessResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
 info:
   contact: {}
-paths: {}
+paths:
+  /evmLaunchpad/CreateNewLaunchPad:
+    post:
+      description: Create New launchpad In Evm
+      produces:
+      - application/json
+      responses:
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.EvmLaunchpaSuccessResponse'
+      summary: Create New launchpad
+      tags:
+      - EVM Launchpad
+  /evmLaunchpad/GetMyAllLaunchpad:
+    get:
+      description: getMy All EvmLaunchpad
+      parameters:
+      - description: input my Eoa Address
+        in: query
+        name: eoa_address
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/models.EvmLaunchpaSuccessResponse'
+      summary: getMy All EvmLaunchpad
+      tags:
+      - EVM Launchpad
 swagger: "2.0"

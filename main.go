@@ -38,7 +38,7 @@ func init() {
 	// --- Create Log Files ---
 	t := time.Now()
 	startTime := t.Format("2006-01-02 15:04:05")
-	logFile := "logs/server_log -" + startTime
+	logFile := "logList/server_log -" + startTime + ".log"
 
 	f, err := os.Create(logFile)
 	if err != nil {
@@ -73,9 +73,9 @@ func main() {
 	els := services.NewEvmLaunchpadServiceImpl(launchpadCtx, query)
 	elc := controllers.NewLaunchpadController(els)
 
+	controllers.SwaggerSet(server)
 	elc.RegisterEvmLaunchpadRoutes(server)
 	tc.RegisterTestRoutes(server)
-	controllers.SwaggerSet(server)
 
 	err = server.Run(":8080")
 	if err != nil {

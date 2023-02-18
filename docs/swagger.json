@@ -3,5 +3,68 @@
     "info": {
         "contact": {}
     },
-    "paths": {}
+    "paths": {
+        "/evmLaunchpad/CreateNewLaunchPad": {
+            "post": {
+                "description": "Create New launchpad In Evm",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "EVM Launchpad"
+                ],
+                "summary": "Create New launchpad",
+                "responses": {
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.EvmLaunchpaSuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/evmLaunchpad/GetMyAllLaunchpad": {
+            "get": {
+                "description": "getMy All EvmLaunchpad",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "EVM Launchpad"
+                ],
+                "summary": "getMy All EvmLaunchpad",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "input my Eoa Address",
+                        "name": "eoa_address",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.EvmLaunchpaSuccessResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.EvmLaunchpaSuccessResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
 }
