@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"database/sql"
-	"io"
 	"log"
 	"os"
 	"time"
@@ -40,12 +39,12 @@ func init() {
 	startTime := t.Format("2006-01-02 15:04:05")
 	logFile := "logList/server_log -" + startTime + ".log"
 
-	f, err := os.Create(logFile)
+	_, err := os.Create(logFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	gin.DefaultWriter = io.MultiWriter(f)
+	// gin.DefaultWriter = io.MultiWriter(f)
 }
 
 func main() {

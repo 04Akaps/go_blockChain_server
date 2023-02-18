@@ -95,6 +95,10 @@ func (elc *EvmLaunchpadController) GetMyAllLaunchpad(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
+func (elc *EvmLaunchpadController) DeleteAllLaunchpadByAdmin(ctx *gin.Context) {
+	// debug용 후에 데이터 전체 삭제해야 할 떄 사용
+}
+
 func (elc *EvmLaunchpadController) RegisterEvmLaunchpadRoutes(r *gin.Engine) {
 	route := r.Group("/evmLaunchpad")
 
