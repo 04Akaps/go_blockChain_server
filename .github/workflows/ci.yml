@@ -3,22 +3,22 @@
 on:
   push:
     branches: [dev/hojin/git-ci]
-jobs:
-  go-version-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: ">=1.19.0"
-          cache: true
-          cache-dependency-path: go.sum
-      - name: Display Go version
-        run: go version
+  jobs:
+    go-version-check:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - name: Set up Go
+          uses: actions/setup-go@v3
+          with:
+            go-version: ">=1.19.0"
+            cache: true
+            cache-dependency-path: go.sum
+        - name: Display Go version
+          run: go version
 
-  go-dependencies-check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: install dependencies
-        run: go get .
+    go-dependencies-check:
+      runs-on: ubuntu-latest
+      steps:
+        - name: install dependencies
+          run: go get .
