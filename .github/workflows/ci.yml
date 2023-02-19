@@ -1,0 +1,21 @@
+ name: my-ci
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ">=1.19.0"
+          cache: true
+          cache-dependency-path: go.sum
+      - name: Display Go version
+        run: go version
+
+      - name: install dependencies
+        run: go get .
