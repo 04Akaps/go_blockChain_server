@@ -10,6 +10,7 @@ type Config struct {
 	ServerAddress string `mapstructure:"server_address"`
 	AdminPassword string `mapstructure:"admin_password"`
 	DbUri         string `mapstructure:"db_uri"`
+	InfuraURL     string `mapstructure:"infura_url"`
 }
 
 func LoadConfig(path string) Config {

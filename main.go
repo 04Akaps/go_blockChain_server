@@ -13,6 +13,7 @@ import (
 
 	migrate "go_blockChain_server/mysql"
 
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/gin-gonic/gin"
 )
 
@@ -72,8 +73,13 @@ func main() {
 	launchpadCtx := context.Background()
 	query := migrate.MigratMysql(db)
 
+	client, err := ethclient.DialContext(launchpadCtx, configType.InfuraURL)
+	if err != nil {
+		log.Fatal("ethClient DialContext failed", err)
+	}
+
 	els := services.NewEvmLaunchpadServiceImpl(launchpadCtx, query)
-	elc := controllers.NewLaunchpadController(els, configType)
+	elc := controllers.NewLaunchpadController(els, configType, client)
 
 	controllers.SwaggerSet(server)
 	elc.RegisterEvmLaunchpadRoutes(server)
