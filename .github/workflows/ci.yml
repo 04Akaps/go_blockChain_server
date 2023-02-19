@@ -14,12 +14,3 @@ jobs:
           cache: true
       - name: Display Go version
         run: go version
-
-  go-dependencies-check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: install dependencies
-        run: pwd
-      - name: itest
-        run: find go.sum
-        # run: go install .
