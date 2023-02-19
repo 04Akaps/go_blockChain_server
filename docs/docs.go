@@ -35,7 +35,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/evmLaunchpad/GetMyAllLaunchpad": {
+        "/evmLaunchpad/GetLaunchPad": {
             "get": {
                 "description": "get EvmLaunchpad",
                 "produces": [
@@ -59,6 +59,38 @@ const docTemplate = `{
                         "description": "",
                         "schema": {
                             "$ref": "#/definitions/models.EvmLaunchpad"
+                        }
+                    }
+                }
+            }
+        },
+        "/evmLaunchpad/GetMyAllLaunchpad": {
+            "get": {
+                "description": "getMy All EvmLaunchpad",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "EVM Launchpad"
+                ],
+                "summary": "getMy All EvmLaunchpad",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "input my Eoa Address",
+                        "name": "eoa_address",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.EvmLaunchpad"
+                            }
                         }
                     }
                 }

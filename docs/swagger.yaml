@@ -42,7 +42,7 @@ paths:
       summary: Create New launchpad
       tags:
       - EVM Launchpad
-  /evmLaunchpad/GetMyAllLaunchpad:
+  /evmLaunchpad/GetLaunchPad:
     get:
       description: get EvmLaunchpad
       parameters:
@@ -59,6 +59,27 @@ paths:
           schema:
             $ref: '#/definitions/models.EvmLaunchpad'
       summary: get EvmLaunchpad
+      tags:
+      - EVM Launchpad
+  /evmLaunchpad/GetMyAllLaunchpad:
+    get:
+      description: getMy All EvmLaunchpad
+      parameters:
+      - description: input my Eoa Address
+        in: query
+        name: eoa_address
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        default:
+          description: ""
+          schema:
+            items:
+              $ref: '#/definitions/models.EvmLaunchpad'
+            type: array
+      summary: getMy All EvmLaunchpad
       tags:
       - EVM Launchpad
 swagger: "2.0"

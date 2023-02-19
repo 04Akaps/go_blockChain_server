@@ -6,10 +6,12 @@ import (
 	"log"
 	"time"
 
+	"go_blockChain_server/config"
 	"go_blockChain_server/controllers"
 	"go_blockChain_server/models"
-	migrate "go_blockChain_server/mysql"
 	"go_blockChain_server/services"
+
+	migrate "go_blockChain_server/mysql"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,6 +24,8 @@ var (
 	tc       controllers.TestController
 	testList []*models.Test
 )
+
+var configType config.Config
 
 func init() {
 	// Test Set
@@ -43,6 +47,8 @@ func init() {
 		log.Fatal(err)
 	}
 
+	configType = config.LoadConfig(".")
+
 	// gin.DefaultWriter = io.MultiWriter(f)
 }
 
@@ -50,9 +56,7 @@ func main() {
 	// gin.SetMode(gin.ReleaseMode) // 후에 필요할 떄 사용
 	server := gin.Default()
 
-	// evmLaunchpad mysql
-
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/launchPad?multiStatements=true&parseTime=true")
+	db, err := sql.Open("mysql", configType.DbUri)
 	if err != nil {
 		log.Fatal("launchpad sql Open Error : ", err)
 	}
@@ -69,13 +73,13 @@ func main() {
 	query := migrate.MigratMysql(db)
 
 	els := services.NewEvmLaunchpadServiceImpl(launchpadCtx, query)
-	elc := controllers.NewLaunchpadController(els)
+	elc := controllers.NewLaunchpadController(els, configType)
 
 	controllers.SwaggerSet(server)
 	elc.RegisterEvmLaunchpadRoutes(server)
 	tc.RegisterTestRoutes(server)
 
-	err = server.Run(":8080")
+	err = server.Run(configType.ServerAddress)
 	if err != nil {
 		log.Fatal(err)
 	}
