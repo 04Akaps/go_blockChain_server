@@ -19,5 +19,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: install dependencies
-        run: echo pwd
+        run: echo "pwd"
         # run: go install .
