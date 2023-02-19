@@ -1,8 +1,6 @@
- name: my-ci
+name: my-ci
 
-on:
-  push:
-    branches: [dev/hojin/git-ci]
+on: push
 
 jobs:
   go-version-check:
