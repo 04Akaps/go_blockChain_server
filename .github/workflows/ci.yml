@@ -19,5 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: install dependencies
-        run: echo "pwd"
+        run: pwd
+      - name: itest
+        run: ls
         # run: go install .
