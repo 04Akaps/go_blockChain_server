@@ -21,4 +21,4 @@ jobs:
     steps:
       - name: install dependencies
         run: |
-          go get .
+          go install .
