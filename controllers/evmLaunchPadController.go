@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 
 	"go_blockChain_server/customerror"
@@ -8,16 +9,20 @@ import (
 	"go_blockChain_server/models"
 	"go_blockChain_server/services"
 
+	"go_blockChain_server/config"
+
 	"github.com/gin-gonic/gin"
 )
 
 type EvmLaunchpadController struct {
 	EvmLaunchpadService services.EvmLaunchpadService
+	config              config.Config
 }
 
-func NewLaunchpadController(els services.EvmLaunchpadService) EvmLaunchpadController {
+func NewLaunchpadController(els services.EvmLaunchpadService, config config.Config) EvmLaunchpadController {
 	return EvmLaunchpadController{
 		EvmLaunchpadService: els,
+		config:              config,
 	}
 }
 
@@ -104,9 +109,9 @@ type getLaunchPadRequest struct {
 // @Description get EvmLaunchpad
 // @Tags EVM Launchpad
 // @Produce json
-// @Param eoa_address query string true "Input ca Address"
+// @Param ca_address query string true "Input ca Address"
 // @response default {object} models.EvmLaunchpad{}
-// @Router /evmLaunchpad/GetMyAllLaunchpad [get]
+// @Router /evmLaunchpad/GetLaunchPad [get]
 func (elc *EvmLaunchpadController) GetOneLaunchpad(ctx *gin.Context) {
 	var req getLaunchPadRequest
 
@@ -127,6 +132,21 @@ func (elc *EvmLaunchpadController) GetOneLaunchpad(ctx *gin.Context) {
 
 func (elc *EvmLaunchpadController) DeleteAllLaunchpadByAdmin(ctx *gin.Context) {
 	// debug용 후에 데이터 전체 삭제해야 할 떄 사용
+	password := ctx.Request.Header["Password"]
+
+	if len(password) == 0 {
+		ctx.AbortWithError(http.StatusMethodNotAllowed, errors.New("password is not exist"))
+		return
+	}
+
+	if elc.config.AdminPassword == ctx.Request.Header["Password"][0] {
+		elc.EvmLaunchpadService.DeleteAllLaunchpadByAdmin()
+
+		ctx.JSON(http.StatusOK, gin.H{"status": 0, "message": "success"})
+	} else {
+		ctx.AbortWithError(http.StatusMethodNotAllowed, errors.New("password error	"))
+		return
+	}
 }
 
 func (elc *EvmLaunchpadController) RegisterEvmLaunchpadRoutes(r *gin.Engine) {
