@@ -1,10 +1,12 @@
  name: my-ci
 
-on: [push]
+on:
+  push:
+    branches: ["*"]
 
 jobs:
-  build:
 
+  go-version-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,5 +19,8 @@ jobs:
       - name: Display Go version
         run: go version
 
+  go-dependencies-check:
+    runs-on: ubuntu-latest
+    steps:
       - name: install dependencies
         run: go get .
