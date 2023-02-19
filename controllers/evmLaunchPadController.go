@@ -11,18 +11,21 @@ import (
 
 	"go_blockChain_server/config"
 
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/gin-gonic/gin"
 )
 
 type EvmLaunchpadController struct {
 	EvmLaunchpadService services.EvmLaunchpadService
 	config              config.Config
+	ethClient           *ethclient.Client
 }
 
-func NewLaunchpadController(els services.EvmLaunchpadService, config config.Config) EvmLaunchpadController {
+func NewLaunchpadController(els services.EvmLaunchpadService, config config.Config, ethClient *ethclient.Client) EvmLaunchpadController {
 	return EvmLaunchpadController{
 		EvmLaunchpadService: els,
 		config:              config,
+		ethClient:           ethClient,
 	}
 }
 
@@ -42,6 +45,14 @@ func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": bodyCheckError, "status": -1})
 		return
 	}
+
+	addressCheck, err := middleware.CheckCreatelaunchpadAddress(ctx, elc.ethClient, req.EoaAddress, req.ContractAddress)
+
+	if err != nil || addressCheck == false {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, err)
+		return
+	}
+
 	// error response example
 	// {
 	// 	"errors": [
@@ -57,7 +68,7 @@ func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 	// 	"status": -1
 	// }
 
-	err := elc.EvmLaunchpadService.CreateNewLaunchpad(&req)
+	err = elc.EvmLaunchpadService.CreateNewLaunchpad(&req)
 	if err != nil {
 		ctx.JSON(500, customerror.ErrorMsg(err)) // db 저장 실패 http 상태 코드
 		return

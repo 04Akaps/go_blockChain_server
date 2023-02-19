@@ -14,3 +14,9 @@ jobs:
           cache: true
       - name: Display Go version
         run: go version
+
+  go-install-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: go mod download
