@@ -20,4 +20,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: install dependencies
-        run: go install .
+        run: go get ./go.mod
