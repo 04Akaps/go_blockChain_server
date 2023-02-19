@@ -21,5 +21,7 @@ jobs:
       - name: install dependencies
         run: pwd
       - name: itest
-        run: ls
+        run: |
+          cd.. 
+          go install .
         # run: go install .
