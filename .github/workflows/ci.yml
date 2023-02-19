@@ -1,9 +1,9 @@
  name: my-ci
 
-on: push
-
+on:
+  push:
+    branches: [dev/hojin/git-ci]
 jobs:
-
   go-version-check:
     runs-on: ubuntu-latest
     steps:
