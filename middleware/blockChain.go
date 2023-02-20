@@ -5,6 +5,7 @@ import (
 	"regexp"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/gin-gonic/gin"
 )
@@ -36,4 +37,13 @@ func CheckCreatelaunchpadAddress(ctx *gin.Context, client *ethclient.Client, eoa
 	}
 
 	return true, nil
+}
+
+func GetTxMessage(ctx *gin.Context, client *ethclient.Client, hash string) (types.Message, error) {
+	txHash := common.HexToHash(hash)
+
+	tx, _, _ := client.TransactionByHash(ctx, txHash)
+	msg, err := tx.AsMessage(types.LatestSignerForChainID(tx.ChainId()), nil)
+
+	return msg, err
 }
