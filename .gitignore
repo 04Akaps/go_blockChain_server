@@ -1,3 +1,2 @@
 *.log
-go.mod
 app.env
