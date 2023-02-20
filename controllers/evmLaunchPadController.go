@@ -53,20 +53,16 @@ func (elc *EvmLaunchpadController) CreateNewLaunchPad(ctx *gin.Context) {
 		return
 	}
 
-	// error response example
-	// {
-	// 	"errors": [
-	// 		{
-	// 			"field": "EoaAddress",
-	// 			"message": "This field is required"
-	// 		},
-	// 		{
-	// 			"field": "ContractAddress",
-	// 			"message": "This field is required"
-	// 		},
-	// 	],
-	// 	"status": -1
-	// }
+	result, err := middleware.GetTxMessage(ctx, elc.ethClient, req.RawTransaction)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, err)
+		return
+	}
+
+	if result.From().String() != req.EoaAddress {
+		ctx.JSON(http.StatusBadRequest, gin.H{"errors": "전송한 Eoa Address와 복호화한 from 필드가 다릅니다.", "status": -1})
+		return
+	}
 
 	err = elc.EvmLaunchpadService.CreateNewLaunchpad(&req)
 	if err != nil {

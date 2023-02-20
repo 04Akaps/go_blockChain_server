@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"log"
 	"time"
 
@@ -14,8 +13,6 @@ import (
 
 	migrate "go_blockChain_server/mysql"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/gin-gonic/gin"
 )
@@ -56,11 +53,6 @@ func init() {
 	// gin.DefaultWriter = io.MultiWriter(f)
 }
 
-const (
-	hashSample      = "0x000f62fb7dfc9ee08f93b8cf1f8c255b39da541e8d640f9cfd85d1d1857ca8a7"
-	signedPublicKey = "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5"
-)
-
 func main() {
 	// gin.SetMode(gin.ReleaseMode) // 후에 필요할 떄 사용
 	server := gin.Default()
@@ -85,31 +77,6 @@ func main() {
 	if err != nil {
 		log.Fatal("ethClient DialContext failed", err)
 	}
-
-	txHash := common.HexToHash(hashSample)
-
-	tx, _, _ := client.TransactionByHash(context.Background(), txHash)
-	msg, err := tx.AsMessage(types.LatestSignerForChainID(tx.ChainId()), nil)
-	if err != nil {
-		log.Fatal("=------%v\n", err)
-	}
-	result := msg.From()
-	fmt.Printf("%v\n", result)
-
-	// v, _, _ := tx.RawSignatureValues()
-	// // receipt, err := client.TransactionReceipt(launchpadCtx, txHash)
-	// // if err != nil {
-	// // 	log.Fatal("=------%v\n", err)
-	// // }
-
-	// fmt.Printf(v)
-
-	// // fmt.Println(receipt)
-	// result, err := crypto.Ecrecover(txHash.Bytes(), append(tx.Data(), v.Bytes()...))
-	// if err != nil {
-	// 	log.Fatal("=-asdsd----%v\n", err)
-	// }
-	// fmt.Println(result)
 
 	els := services.NewEvmLaunchpadServiceImpl(launchpadCtx, query)
 	elc := controllers.NewLaunchpadController(els, configType, client)
