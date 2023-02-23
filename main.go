@@ -28,6 +28,7 @@ var (
 
 var configType config.Config
 
+// end
 func init() {
 	// Test Set
 	testCtx = context.TODO()
